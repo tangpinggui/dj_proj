@@ -1,0 +1,93 @@
+{% extends 'base/front_base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/news/search.css' %}">
+    <style>
+        .search_highlight{
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+		<div class="main-container">
+			<div class="search-group">
+                <form action="" method="get">
+                    <input type="text" class="search-input" placeholder="请输入关键字" name="q">
+                    <button class="search-btn">搜索</button>
+                </form>
+			</div>
+            <div class="list-group">
+                <p class="list-search-title">
+                    热门推荐
+                </p>
+                <ul class="list-content-group">
+                    <li>
+                        <div class="thumbnail-group">
+                            <a href="#">
+                                <img src="https://static-image.xfz.cn/1530244238_228.jpg-website.news.list" alt="">
+                            </a>
+                        </div>
+                        <div class="content-group">
+                            <p class="title-group">
+                                <a href="#">
+                                    意思生活获千万天使轮融资，德迅投资为投资方
+                                </a>
+                            </p>
+                            <p class="desc-group">不凡商业6月29日消息，居家生活类短视频自媒体EClife意思生活已在2018年年初获得千万级天使轮融资</p>
+                            <div class="content-footer">
+                                <span class="category-group">创投案例</span>
+                                <span class="time-group">1小时前</span>
+                                <span class="author-group">曾李青</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnail-group">
+                            <a href="#">
+                                <img src="https://static-image.xfz.cn/1530244238_228.jpg-website.news.list" alt="">
+                            </a>
+                        </div>
+                        <div class="content-group">
+                            <p class="title-group">
+                                <a href="#">
+                                    意思生活获千万天使轮融资，德迅投资为投资方
+                                </a>
+                            </p>
+                            <p class="desc-group">不凡商业6月29日消息，居家生活类短视频自媒体EClife意思生活已在2018年年初获得千万级天使轮融资</p>
+                            <div class="content-footer">
+                                <span class="category-group">创投案例</span>
+                                <span class="time-group">1小时前</span>
+                                <span class="author-group">曾李青</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnail-group">
+                            <a href="#">
+                                <img src="https://static-image.xfz.cn/1530244238_228.jpg-website.news.list" alt="">
+                            </a>
+                        </div>
+                        <div class="content-group">
+                            <p class="title-group">
+                                <a href="#">
+                                    意思生活获千万天使轮融资，德迅投资为投资方
+                                </a>
+                            </p>
+                            <p class="desc-group">不凡商业6月29日消息，居家生活类短视频自媒体EClife意思生活已在2018年年初获得千万级天使轮融资</p>
+                            <div class="content-footer">
+                                <span class="category-group">创投案例</span>
+                                <span class="time-group">1小时前</span>
+                                <span class="author-group">曾李青</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+		</div>
+		<div class="sidebar-container">
+            {% include 'base/side.html' %}
+        </div>
+	</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base/front_base.html' %}
+
+{% block title %}
+    首页
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/news/news.css' %}">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/base/side.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <div class="main-container">
+            <div id="carousel-example-generic" class="carousel slide banner" data-ride="carousel">
+  <!-- 表示的是下面的小点点，小点点的数量必须要和轮播图的数量保持一致 -->
+          <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+          </ol>
+
+          <!-- 表示的是轮播图 -->
+          <div class="carousel-inner" role="listbox">
+            <div class="item active">
+              <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c509s0r234e1s7nis91lbkolr7.jpg" alt="...">
+            </div>
+            <div class="item">
+              <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c50aaii213ab1ppe14k9482vdbh.jpg" alt="...">
+            </div>
+              <div class="item">
+              <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1cg1niednauj1itn1t5a1ap4111km.jpg" alt="...">
+            </div>
+              <div class="item">
+                  <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c509s0r234e1s7nis91lbkolr7.jpg" alt="">
+              </div>
+          </div>
+
+          <!-- 表示的是左右两边的切换按钮 -->
+          <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+            <div class="list-outer-group">
+                <ul class="list-tab-group">
+                    <li class="active">
+                        <a href="#">最新资讯</a>
+                    </li>
+                    <li>
+                        <a href="#">热点</a>
+                    </li>
+                    <li>
+                        <a href="#">深度报道</a>
+                    </li>
+                    <li>
+                        <a href="#">干货分享</a>
+                    </li>
+                    <li>
+                        <a href="#">投资人说</a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="news-list-group">
+                <li>
+                    <div class="thumbnail-group">
+                        <a href="#">
+                            <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                        </a>
+                    </div>
+                    <div class="news-group">
+                        <div class="title">
+                            <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ONE六成股权</a>
+                        </div>
+                        <p class="desc">外界关于万达要出售此前在海外投资项目的消息一直不断。</p>
+                        <div class="news-more-group">
+                            <span class="category">深度报道</span>
+                            <span class="pub-time">1个小时之前</span>
+                            <span class="author">admin</span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="thumbnail-group">
+                        <a href="#">
+                            <img src="http://static-image.xfz.cn/1516169692_914.jpg-website.news.list" alt="">
+                        </a>
+                    </div>
+                    <div class="news-group">
+                        <div class="title">
+                            <a href="#">王健林卖掉进军海外首个项目:17亿售伦敦ONE六成股权</a>
+                        </div>
+                        <p class="desc">外界关于万达要出售此前在海外投资项目的消息一直不断。</p>
+                        <div class="news-more-group">
+                            <span class="category">深度报道</span>
+                            <span class="author">admin</span>
+                            <span class="pub-time">1个小时之前</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="load-more-group">
+                <button class="load-more-btn">加载更多</button>
+            </div>
+        </div>
+        <div class="sidebar-container">
+            {% include 'base/side.html' %}
+        </div>
+    </div>
+{% endblock %}
