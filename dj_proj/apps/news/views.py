@@ -19,9 +19,8 @@ def index(request):
 @require_GET
 def news_list(request):
     page = int(request.GET.get('page', 1))  # 前端请求第几页
-    # News, User, Category
-    # start = 10 * (page - 1)
-    # end = start + 10
+    category_id = int(request.GET.get('category_id', 0))
+    print(category_id, 'categoryid', '??')
 
     start = settings.ONE_PAGE_NEWS_COUNT * (page - 1)
     end = settings.ONE_PAGE_NEWS_COUNT + start
@@ -32,7 +31,10 @@ def news_list(request):
     """
     # 通过pip install djangorestframework, 使用该模块提供的序列化，使用方法官网。类似forms验证
     # 在进行序列化后
-    newses = News.objects.all()[start:end]  # 注意这儿不要改动QuerySet类型，比如别使用value
+    if category_id:
+        newses = News.objects.filter(category=category_id)[start:end]  # 注意这儿不要改动QuerySet类型，比如别使用value
+    else:
+        newses = News.objects.all()[start:end]  # 注意这儿不要改动QuerySet类型，比如别使用value
     serializer = NewsSerializers(newses, many=True)  # many代表外键字段取多个字段
     newses = serializer.data  # 获取serializer的json数据
     return restful.result(data=newses)

@@ -1,36 +1,34 @@
-
-
-.main{
+.main {
     width: 1170px;
     margin: 0 auto;
     overflow: hidden;
     margin-top: 20px;
 }
 
-.main .main-container{
+.main .main-container {
     float: left;
     width: 795px;
     /*background: pink;*/
 }
 
-.main .sidebar-container{
+.main .sidebar-container {
     float: right;
     width: 355px;
     height: 200px;
 }
 
-.main-container .banner{
+.main-container .banner {
     width: 100%;
     overflow: hidden;
     height: 200px;
 }
 
-.banner img{
+.banner img {
     width: 100%;
-    height: 200px!important;
+    height: 200px !important;
 }
 
-.list-outer-group{
+.list-outer-group {
     margin-top: 20px;
     background: #fff;
     height: 66px;
@@ -39,11 +37,16 @@
     border-right: none;
 }
 
-.list-outer-group .list-tab-group{
+.list-outer-group .list-tab-group {
     overflow: hidden;
 }
+.list-tab-group li:first-child a{
+    border-left: 4px solid #9197b0;
+    height: 66px;
+    padding-left: 8px;
+}
 
-.list-tab-group li{
+.list-tab-group li {
     float: left;
     margin-right: 20px;
     line-height: 66px;
@@ -51,98 +54,100 @@
 }
 
 /* first-of-type：选中第一个li标签 */
-.list-tab-group li:first-of-type a{
-    border-left: 3px solid #5b86db;
+.list-tab-group li:first-of-type a {
+    border-left: 3px solid #b07a50;
     padding-left: 10px;
 }
 
-.list-tab-group li.active a{
+.list-tab-group li.active a {
     color: #212121;
+    font-size: 22px;
 }
 
-.list-tab-group li a{
+.list-tab-group li a {
     color: #878787;
 }
 
-.list-tab-group li a:hover{
+.list-tab-group li a:hover {
     text-decoration: none;
 }
 
 /***************新闻列表的样式******************/
-.news-list-group{
+.news-list-group {
     padding: 20px;
 }
 
-.news-list-group li{
+.news-list-group li {
     overflow: hidden;
     padding-bottom: 20px;
     border-bottom: 1px solid #eee;
     margin-bottom: 20px;
 }
 
-.news-list-group li .thumbnail-group{
+.news-list-group li .thumbnail-group {
     float: left;
     width: 224px;
     height: 160px;
 }
 
-.thumbnail-group img{
+.thumbnail-group img {
     width: 100%;
     height: 100%;
 }
 
-.news-list-group li .news-group{
+.news-list-group li .news-group {
     float: right;
     width: 500px;
     height: 160px;
     position: relative;
 }
 
-.news-group .title a{
+.news-group .title a {
     font-size: 22px;
     color: #212121;
 }
 
-.news-group .title a:hover{
+.news-group .title a:hover {
     text-decoration: none;
     color: #5b86db;
 }
 
-.news-group .desc{
+.news-group .desc {
     color: #878787;
     font-size: 14px;
     margin-top: 10px;
 }
 
-.news-group .news-more-group{
+.news-group .news-more-group {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
 }
 
-.news-more-group .category{
+.news-more-group .category {
     color: #5b86db;
 }
 
-.news-more-group .author,.pub-time{
+.news-more-group .author, .pub-time {
     float: right;
 }
 
-.news-more-group .author{
+.news-more-group .author {
     margin-right: 20px;
 }
 
-.load-more-group{
+.load-more-group {
     margin-top: 10px;
     text-align: center;
 }
 
-.load-more-group .load-more-btn{
+.load-more-group .load-more-btn {
     width: 400px;
     height: 40px;
     color: #6d85ac;
     background: #d2dcea;
     border: none;
 }
+
 /***************新闻列表的样式******************/

@@ -77,9 +77,10 @@
             </div>
             <div class="list-outer-group">
                 <ul class="list-tab-group">
+                    <li class="active" category-id="0"><a href="javascript:void(0);">实时新闻</a></li>
                     {% for category in categories %}
-                        <li class="active">
-                            <a href="#">{{ category.name }}</a>
+                        <li category-id="{{ category.id }}">
+                            <a href="javascript:void(0)">{{ category.name }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -109,7 +110,7 @@
                 {% endfor %}
             </ul>
             <div class="load-more-group">
-                <button class="load-more-btn">加载更多</button>
+                <button class="load-more-btn" page="2">加载更多</button>
             </div>
         </div>
         <div class="sidebar-container">
