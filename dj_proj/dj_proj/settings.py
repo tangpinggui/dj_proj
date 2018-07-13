@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,12 +35,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 
     'apps.news',
     'apps.course',
     'apps.payinfo',
     'apps.cms',
     'apps.xfzauth',
+    'apps.ueditor',
+    'apps.utils',
 ]
 
 MIDDLEWARE = [
@@ -77,21 +78,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dj_proj.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_comi',
+        'NAME': 'xfz1',
         'USER': 'root',
         'PASSWORD': 'mysqlcomi',
         'HOST': '127.0.0.1',
         'PORT': '3306'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -111,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -123,8 +121,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+USE_TZ = True  # 设置为aware time  ps:清醒的时间，自动区分时区
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -139,3 +136,23 @@ AUTH_USER_MODEL = 'xfzauth.User'  # 重写的User模型
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 七牛云相关的配置
+QINIU_ACCESS_KEY = 'M4zCEW4f9XPanbMN-Lb9O0S8j893f0e1ezAohFVL'
+QINIU_SECRET_KEY = '7BKV7HeEKM3NDJk8_l_C89JI3SMmeUlAIatzl9d4'
+QINIU_BUCKET_NAME = 'hyvideo'
+QINIU_DOMAIN = 'http://7xqenu.com1.z0.glb.clouddn.com/'
+
+# UEditor相关的配置
+UEDITOR_UPLOAD_TO_SERVER = True
+UEDITOR_UPLOAD_PATH = MEDIA_ROOT
+UEDITOR_CONFIG_PATH = os.path.join(BASE_DIR, 'static', 'ueditor', 'config.json')
+
+UEDITOR_QINIU_ACCESS_KEY = QINIU_ACCESS_KEY
+UEDITOR_QINIU_SECRET_KEY = QINIU_SECRET_KEY
+UEDITOR_QINIU_BUCKET_NAME = QINIU_BUCKET_NAME
+UEDITOR_QINIU_DOMAIN = QINIU_DOMAIN
+UEDITOR_UPLOAD_TO_QINIU = True
+
+# 返回前端新闻个数
+ONE_PAGE_NEWS_COUNT = 1

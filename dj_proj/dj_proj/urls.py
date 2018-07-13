@@ -21,5 +21,5 @@ urlpatterns = [
     path("", include("apps.news.urls")),
     path("account/", include("apps.xfzauth.urls")),
     path("cms/", include("apps.cms.urls")),
-    path("cms/", include("apps.cms.urls")),
+    # path("ueditor/", include("apps.ueditor.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

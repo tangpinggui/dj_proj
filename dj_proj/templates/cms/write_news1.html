@@ -26,15 +26,15 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="news-title">新闻标题</label>
-                            <input type="text" class="form-control" id="news-title" placeholder="输入新闻的标题">
+                            <input type="text" name="title" class="form-control" id="news-title" placeholder="输入新闻的标题">
                         </div>
                         <div class="form-group">
                             <label for="news-describe">新闻描述</label>
-                            <input type="text" class="form-control" id="news-describe" placeholder="输入新闻的描述内容">
+                            <input type="text" name="desc" class="form-control" id="news-describe" placeholder="输入新闻的描述内容">
                         </div>
                         <div class="form-group">
                             <label>新闻分类</label>
-                            <select class="form-control">
+                            <select class="form-control" name="category">
                                 {% for category in categories %}
                                     <option value="{{ category.id }}">{{ category.name }}</option>
                                 {% endfor %}
@@ -67,7 +67,7 @@
                                 <script id="editor" type="text/plain"></script>
                             </div>
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-primary pull-right">发布</button>
+                                <button type="submit" class="btn btn-primary pull-right" id="puBtn">发布</button>
                             </div>
                         </div>
                 </form>

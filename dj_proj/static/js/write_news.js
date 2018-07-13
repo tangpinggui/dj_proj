@@ -1,4 +1,3 @@
-/*
 // 点击上传文件 服务器
 $(function () {
     var upBtn = $('#up-file');
@@ -7,7 +6,7 @@ $(function () {
         var fileData = new FormData;
         fileData.append('upfile', file);  // 需要将文件写入FormData中,再传给后端
         xfzajax.post({
-            'url': '/cms/write/news/',
+            'url': '/cms/save_news/',
             'data': fileData,
             'contentType': false,  // 不到指定类型
             'processData': false,  // 不做处理，因为是文件
@@ -24,8 +23,8 @@ $(function () {
         })
     })
 });
-*/
 
+/*
 // 上传到七牛 de文件及进度条显示
 $(function () {
     var progressGroup = $('#progress-group');  // 控制进度条是否显示
@@ -92,12 +91,45 @@ $(function () {
         });
     })
 });
+*/
 
 // UEditor
 $(function () {
-    var uEditor = $('#editor');
-    var ue = UE.getEditor('editor', {
+    window.ue = UE.getEditor('editor', {
         'initialFrameHeight': 400,
-        'serverUrl': '/cms/'
+        'serverUrl': '/ueditor/upload/'
     });
+});
+
+// 通过ajax发送news
+$(function () {
+    var sendBtn = $('#puBtn');
+    sendBtn.click(function (envent) {
+        envent.preventDefault();
+        var title = $("input[name='title']").val();
+        var desc = $("input[name='desc']").val();
+        var category = $("select[name='category']").val();
+        var thumbnail = $("input[name='thumbnail']").val();
+        var content_html = ue.getContent();
+
+        xfzajax.post({
+            'url': '/cms/write/news/',
+            'data': {
+                'title': title,
+                'desc': desc,
+                'category': category,
+                'thumbnail': thumbnail,
+                'content': content_html
+            },
+            'success': function (result) {
+                if (result['code'] === 200) {
+                    xfzalert.alertSuccess("发布新闻成功", function () {
+                        window.location.reload()
+                    });
+                } else {
+                    xfzalert.alertError(result['message'])
+                }
+            }
+        })
+    })
 });

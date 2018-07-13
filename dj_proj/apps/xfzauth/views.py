@@ -56,7 +56,6 @@ def RegisterView(request):
             username = clean_data.get("username")
             user = User.objects.create_user(telephone=telephone, username=username, password=password)
             login(request, user)
-            validata_result = forms.validate_data(request)
             return restful.ok()  # restful have JsonResponse
         else:
             message = forms.get_first_message()  # get_first_message自定义提取第一条错误信息
@@ -102,7 +101,6 @@ def img_catpcha(request):
     text, image = hycaptcha.Captcha.gene_code()
     # 存入session, forms中取出判断
     request.session["img_captcha"] = text
-
     out = BytesIO()
     image.save(out, 'png')
     out.seek(0)
