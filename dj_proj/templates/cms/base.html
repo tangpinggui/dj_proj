@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="{% static 'adminlte/dist/css/skins/_all-skins.min.css' %}">
     <link rel="stylesheet" href="{% static 'sweetalert/sweetalert.css' %}">
     <script src="{% static 'adminlte/bower_components/jquery/dist/jquery.min.js' %}"></script>
-<script src="{% static 'adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'adminlte/dist/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'adminlte/dist/js/adminlte.min.js' %}"></script>
     <script src="{% static 'sweetalert/sweetalert.min.js' %}"></script>
     <script src="{% static 'sweetalert/xfzalert.js' %}"></script>
     <script src="{% static 'js/xfzajax.js' %}"></script>
     <script src="{% static 'js/message.js' %}"></script>
-{% block head %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -41,13 +41,15 @@
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="http://img.tukexw.com/img/f1a87f7dcda706c1.jpg" class="user-image" alt="User Image">
+                            <img src="http://img.tukexw.com/img/f1a87f7dcda706c1.jpg" class="user-image"
+                                 alt="User Image">
                             <span class="hidden-xs">唐苹桂</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="http://img.tukexw.com/img/f1a87f7dcda706c1.jpg" class="img-circle" alt="User Image">
+                                <img src="http://img.tukexw.com/img/f1a87f7dcda706c1.jpg" class="img-circle"
+                                     alt="User Image">
 
                                 <p>
                                     English name: Comi
@@ -83,7 +85,7 @@
             </form>
 
             <ul class="sidebar-menu" data-widget="tree">
-                <li >
+                <li>
                     <a href="{% url 'cms:index' %}">
                         <i class="fa fa-home"></i>
                         <span>首页</span>
@@ -100,6 +102,12 @@
                     <a href="{% url 'cms:news_category' %}">
                         <i class="fa fa-tag"></i>
                         <span>新闻分类</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'cms:banners' %}">
+                        <i class="fa fa-anchor"></i>
+                        <span>管理轮播图</span>
                     </a>
                 </li>
             </ul>

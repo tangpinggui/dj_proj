@@ -1,0 +1,22 @@
+img{
+    width: 328px;
+    height: 82px;
+}
+.box{
+    width: 800px;
+}
+.box .box-right{
+    height: 80px;
+
+    padding-left: 10px;
+}
+.box-right input{
+    text-align: center;
+}
+.box-right input+.last{
+    margin-top: 12px;
+}
+.box-body #commit-btn{
+    margin-top: 10px;
+}
+

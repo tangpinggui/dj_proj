@@ -122,3 +122,7 @@ def del_news_category(request):
         return restful.ok()
     except:
         return restful.params_error(message='该分类，已经被怪兽吃掉了。emmmm')
+
+
+def banners(request):
+    return render(request, 'cms/banners.html')

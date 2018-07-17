@@ -9,20 +9,19 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/base/side.css' %}">
-    <script src="{% static 'js/template-web.js' %}"></script>
     <script src="{% static 'js/news_index.js' %}"></script>
     <script type="text/html" id="news-item">
         {% verbatim %}
         {{ each newses as news index }}
         <li>
             <div class="thumbnail-group">
-                <a href="#">
+                <a href="/news_detail/{{ news.id }} ">
                     <img src="{{ news.thumbnail }}" alt="">
                 </a>
             </div>
             <div class="news-group">
                 <div class="title">
-                    <a href="#">{{ news.title }}</a>
+                    <a href="/news_detail/{{ news.id }}">{{ news.title }}</a>
                 </div>
                 <p class="desc">{{ news.desc }}</p>
                 <div class="news-more-group">
@@ -79,7 +78,7 @@
                 <ul class="list-tab-group">
                     <li class="active" category-id="0"><a href="javascript:void(0);">实时新闻</a></li>
                     {% for category in categories %}
-                        <li category-id="{{ category.id }}">
+                        <li category-id="{{ category.pk }}">
                             <a href="javascript:void(0)">{{ category.name }}</a>
                         </li>
                     {% endfor %}
@@ -89,13 +88,13 @@
                 {% for news in newses %}
                     <li>
                         <div class="thumbnail-group">
-                            <a href="#">
+                            <a href="{% url 'news:news_detail' news_id=news.id %}">
                                 <img src="{{ news.thumbnail }}" alt="">
                             </a>
                         </div>
                         <div class="news-group">
                             <div class="title">
-                                <a href="#">{{ news.title }}</a>
+                                <a href="{% url 'news:news_detail' news_id=news.id %}">{{ news.title }}</a>
                             </div>
                             <p class="desc">{{ news.desc }}</p>
                             {% autoescape off %}

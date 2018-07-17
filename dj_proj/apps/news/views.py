@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.shortcuts import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.conf import settings
+from django.http import Http404
 
-from .models import News, NewsCategory
-from .news_serializer import NewsSerializers
+from .models import News, NewsCategory, Comment
+from .news_serializer import NewsSerializers, CommentSerializers
+from .forms import CommentForm
+from apps.xfzauth.xfz_auth_required import xfz_auth_required
 
 from utils import restful
 
@@ -38,3 +41,29 @@ def news_list(request):
     serializer = NewsSerializers(newses, many=True)  # many代表外键字段取多个字段
     newses = serializer.data  # 获取serializer的json数据
     return restful.result(data=newses)
+
+
+@require_GET
+def news_detail(request, news_id):
+    try:
+        news = News.objects.select_related('author', 'category').get(id=news_id)
+        return render(request, 'news/news_detail.html', locals())
+    except News.DoesNotExist:
+        raise Http404  # Http404会从templates下面返回404.html
+
+
+@require_POST
+@xfz_auth_required
+def add_comment(request):
+    forms = CommentForm(request.POST)
+    if forms.is_valid():
+        clean_data = forms.cleaned_data
+        content = clean_data.get('content')
+        news_id = clean_data.get('news_id')
+        news = News.objects.get(id=news_id)
+        author = request.user
+        comment = Comment.objects.create(content=content, news=news, author=author)
+        serialize = CommentSerializers(comment)
+        print(serialize.data)
+        return restful.result(data=serialize.data)
+    return restful.params_error(message=forms.get_first_message())

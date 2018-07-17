@@ -1,0 +1,56 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    轮播图
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/cms/banners.css' %}">
+    <script src="{% static 'js/template-web.js' %}"></script>
+    <script src="{% static 'js/banner.js' %}"></script>
+{% endblock %}
+
+{% block content-header %}
+    <h1>轮播图管理</h1>
+{% endblock %}
+
+{% block content %}
+    <script id="banner-item" type="text/html">
+        {% verbatim %}
+        <div class="col-md-12 banner-son">
+            <div class="box">
+                <div class="box-header">
+                    <span class="pull-left">优先级： 0</span>
+                    <i class="fa fa-close pull-right close-btn"></i>
+                </div>
+                <div class="box-body form-group">
+                    <img src="{{ '/static/image/banner.jpg' }}" class="pull-left">
+                    <div class="input-group box-right">
+                        <input type="text" class="form-control">
+                        <input type="text" class="form-control last">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm pull-right" id="commit-btn">提交</button>
+                </div>
+            </div>
+        </div>
+        {% endverbatim %}
+    </script>
+    <div class="row banner-box">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div class="form-group btn-group">
+                        <button class="btn btn-primary pull-left" id="add-btn">
+                            <i class="fa fa-plus close-btn"></i>
+                            添加轮播图
+                        </button>
+                        <ul class="pull-left describe">
+                            <li>支持格式jpg, git, png, 最多可上传6张</li>
+                            <li>比例4: 1, 宽度在800px以上, 5M以内</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -18,3 +18,13 @@ class News(models.Model):
 
     class Meta:
         ordering = ['-pubtime']  # 以后进行News.object提取数据时，按照指定字段的排序提取数据
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    pub_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='comments')
+
+    class Meta:
+        ordering = ['-pub_time']

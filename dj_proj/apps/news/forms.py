@@ -2,7 +2,7 @@
 from django.forms import Form
 from django import forms
 from apps.xfzauth.forms import FormMixin
-from .models import News
+from .models import News, Comment
 
 
 class NewsForm(forms.ModelForm, FormMixin):
@@ -16,3 +16,8 @@ class NewsForm(forms.ModelForm, FormMixin):
                 'required': '必须传入分类id'
             }
         }
+
+
+class CommentForm(forms.Form, FormMixin):
+    news_id = forms.IntegerField()
+    content = forms.CharField()
