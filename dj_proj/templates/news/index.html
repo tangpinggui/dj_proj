@@ -42,26 +42,28 @@
             <div id="carousel-example-generic" class="carousel slide banner" data-ride="carousel">
                 <!-- 表示的是下面的小点点，小点点的数量必须要和轮播图的数量保持一致 -->
                 <ol class="carousel-indicators">
-                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                    {% for banner in banners %}
+                        {% if forloop.counter0 == 0 %}
+                        <li data-target="#carousel-example-generic" data-slide-to='0' class="active"></li>
+                        {% else %}
+                        <li data-target="#carousel-example-generic" data-slide-to='{{ forloop.counter0 }}'></li>
+                        {% endif %}
+                    {% endfor %}
                 </ol>
 
                 <!-- 表示的是轮播图 -->
                 <div class="carousel-inner" role="listbox">
-                    <div class="item active">
-                        <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c509s0r234e1s7nis91lbkolr7.jpg" alt="...">
-                    </div>
-                    <div class="item">
-                        <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c50aaii213ab1ppe14k9482vdbh.jpg" alt="...">
-                    </div>
-                    <div class="item">
-                        <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1cg1niednauj1itn1t5a1ap4111km.jpg" alt="...">
-                    </div>
-                    <div class="item">
-                        <img src="http://7xqenu.com1.z0.glb.clouddn.com/o_1c509s0r234e1s7nis91lbkolr7.jpg" alt="">
-                    </div>
+                    {% for banner in banners %}
+                        {% if forloop.counter0 == 0 %}
+                            <div class="item active">
+                        {% else %}
+                            <div class="item">
+                        {% endif %}
+                        <a href="{{ banner.jump_link }}" target="_blank">
+                            <img src="{{ banner.image_url }}" alt="...">
+                        </a>
+                        </div>
+                    {% endfor %}
                 </div>
 
                 <!-- 表示的是左右两边的切换按钮 -->

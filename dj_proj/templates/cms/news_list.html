@@ -1,0 +1,48 @@
+{% extends 'cms/base.html' %}
+
+
+{% block title %}
+    新闻列表
+{% endblock %}
+
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block content-header %}
+    <h1>新闻管理</h1>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="box-header">
+            <table class="form-inline">
+                <thead class="form-group">
+                <th>
+                    <div class="pull-left" style="margin-right: 25px">
+                        <label for="start-input">时间：</label>
+                        <input class="form-control" type="datetime-local" id="start-input" placeholder="开始时间">
+                        <span>-</span>
+                        <input class="form-control" type="datetime-local" placeholder="结束时间">
+                    </div>
+                    <label for="title-input">标题：</label>
+                    <input class="form-control" type="text" id="title-input" placeholder="关键字">
+                    <label for="">分类：</label>
+                    <select class="form-control" name="" id="category-input">
+                        {% for category in categories %}
+                            <option value="">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-primary">查询</button>
+                    <a href="{% url 'cms:news_list' %}" class="btn btn-info btn-xs">清除查询</a>
+                </th>
+                </thead>
+            </table>
+        </div>
+        <div class="box-body"></div>
+        <div class="box-footer"></div>
+    </div>
+{% endblock %}

@@ -1,3 +1,10 @@
 from django.db import models
 
-# Create your models here.
+
+class Banners(models.Model):
+    image_url = models.URLField()
+    priority = models.IntegerField()
+    jump_link = models.URLField()
+
+    class Meta:
+        ordering = ['-priority']

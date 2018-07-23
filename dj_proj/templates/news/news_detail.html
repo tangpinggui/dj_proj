@@ -42,7 +42,7 @@
                     <p><br></p>
                 </article>
                 <div class="comment-group">
-                    <h2 class="comment-title">文章评论(0)</h2>
+                    <h2 class="comment-title">文章评论({{ news_count }})</h2>
                     {% if user.is_authenticated %}
                         <textarea id="comment-textarea" placeholder="请填写评论" cols="30" rows="10"
                                   class="comment-textarea logined-textarea"></textarea>

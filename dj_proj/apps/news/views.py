@@ -10,12 +10,14 @@ from .forms import CommentForm
 from apps.xfzauth.xfz_auth_required import xfz_auth_required
 
 from utils import restful
+from apps.cms.models import Banners
 
 
 @require_GET
 def index(request):
     newses = News.objects.select_related('category', 'author')[0:settings.ONE_PAGE_NEWS_COUNT]
     categories = NewsCategory.objects.all()
+    banners = Banners.objects.all()
     return render(request, 'news/index.html', locals())
 
 
@@ -47,6 +49,7 @@ def news_list(request):
 def news_detail(request, news_id):
     try:
         news = News.objects.select_related('author', 'category').get(id=news_id)
+        news_count = news.comments.count()
         return render(request, 'news/news_detail.html', locals())
     except News.DoesNotExist:
         raise Http404  # Http404会从templates下面返回404.html
@@ -64,6 +67,5 @@ def add_comment(request):
         author = request.user
         comment = Comment.objects.create(content=content, news=news, author=author)
         serialize = CommentSerializers(comment)
-        print(serialize.data)
         return restful.result(data=serialize.data)
     return restful.params_error(message=forms.get_first_message())

@@ -8,8 +8,11 @@ from django.utils.decorators import method_decorator
 from qiniu import Auth
 
 from django.conf import settings
+from .models import Banners
+from .forms import AddBannersForm, ChangeBannerForm
 from ..news.models import NewsCategory, News
 from ..news.forms import NewsForm
+from ..xfzauth.xfz_auth_required import xfz_auth_required
 
 from utils import restful
 
@@ -59,6 +62,12 @@ class WriteNewsView(View):
             return self.post(request)
 
 
+def news_list(request):
+    newses = News.objects.all()
+    categories = NewsCategory.objects.all()
+    return render(request, 'cms/news_list.html', locals())
+
+
 @require_POST
 def save_thumbnail(request):
     """ 文件本地储存  """
@@ -73,7 +82,7 @@ def save_thumbnail(request):
         url = request.build_absolute_uri(settings.MEDIA_URL + file_content.name)
         return restful.result(data={'url': url})
     except:
-        return restful.params_error('识别不了该文件')
+        return restful.params_error(message='识别不了该文件')
 
 
 @require_GET
@@ -124,5 +133,51 @@ def del_news_category(request):
         return restful.params_error(message='该分类，已经被怪兽吃掉了。emmmm')
 
 
+@xfz_auth_required
 def banners(request):
     return render(request, 'cms/banners.html')
+
+
+@require_POST
+def add_banners(request):
+    forms = AddBannersForm(request.POST)
+    if forms.is_valid():
+        try:
+            image_url = forms.cleaned_data.get('image_url')
+            priority = forms.cleaned_data.get('priority')
+            jump_link = forms.cleaned_data.get('jump_link')
+            banner = Banners.objects.create(image_url=image_url, priority=priority, jump_link=jump_link)
+            banner_id = banner.pk
+        except:
+            return restful.params_error(message="服务器gg")
+        return restful.result(data={'banner_id': banner_id}, message="轮播图添加成功")
+    return restful.params_error(message=forms.get_first_message())
+
+
+@require_POST
+def banner_list(request):
+    banners = list(Banners.objects.all().values())  # values将QuerySet对象里的数据转化成字典
+    return restful.result(data={'banners': banners})
+
+
+@require_POST
+def delete_banner(request):
+    banner_id = request.POST.get('banner_id')
+    Banners.objects.get(id=banner_id).delete()
+    return restful.result(message="轮播图删除成功")
+
+
+@require_POST
+def change_banner(request):
+    forms = ChangeBannerForm(request.POST)
+    if forms.is_valid():
+        try:
+            image_url = forms.cleaned_data.get('image_url')
+            priority = forms.cleaned_data.get('priority')
+            jump_link = forms.cleaned_data.get('jump_link')
+            banner_id = forms.cleaned_data.get('banner_id')
+            Banners.objects.filter(id=banner_id).update(image_url=image_url, priority=priority, jump_link=jump_link)
+            return restful.result(data={"banner_id": banner_id}, message="轮播图修改成功")
+        except:
+            return restful.params_error(message="服务器出错")
+    return restful.params_error(message="参数错误")
