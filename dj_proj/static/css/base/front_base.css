@@ -50,9 +50,9 @@ body{
 
 .nav .logo-box{
     width: 145px;
-    height: 49px;
-    background: url("http://www.xfz.cn/static/build/images/logo.png");
-    margin-top: 8px;
+    height: 64px;
+    background: #3a3a3a url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532582595344&di=7338b8956c34ebe847b713ba112b7a56&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F01%2F30%2F16pic_130073_b.jpg")repeat-y center center/cover;
+    margin-top: 0px;
     float: left;
 }
 

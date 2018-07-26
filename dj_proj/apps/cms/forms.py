@@ -12,7 +12,12 @@ class AddBannersForm(forms.ModelForm, FormMixin):
         error_messages = {
             'image_url': {
                 'required': "请选择轮播图"
-            }
+            },
+            'priority': {
+                'required': "选择优先级"
+            },
+            'jump_link': {
+                'required': "皮啥"}
         }
 
 

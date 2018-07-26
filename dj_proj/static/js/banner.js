@@ -53,6 +53,7 @@ function addSelectEvent(bannerItem) {
                 if (result['code'] == 200) {
                     var url = result.data.url;
                     addImage.attr('src', url);
+                    addImage.addClass("new-img-url")
                 }
             }
         })
@@ -62,44 +63,48 @@ function addSelectEvent(bannerItem) {
 // 添加banner detail
 function addBannerDetail(bannerItem) {
     var commitBtn = bannerItem.find('#commit-btn');
-    var addImage = bannerItem.find('.add-image');
 
     commitBtn.click(function () {
-        var image_url = addImage.attr('src');
-        var priority = bannerItem.find('.priority').val();
-        var jump_link = bannerItem.find('.jump-link').val();
-
-        var banner_id = bannerItem.attr('banner-id');
-        var url = null;
-        if(banner_id){
-            url = '/cms/change_banner/'
-        }else {
-            url = '/cms/add_banners/'
-        }
-        xfzajax.post({
-            'url': url,
-            'data': {
-                'image_url': image_url,
-                'priority': priority,
-                'jump_link': jump_link,
-                'banner_id': banner_id
-            },
-            'success': function (result) {
-                if (result['code'] === 200) {
-                    //2. var banner_id = undefined  操作1，相当于操作 2
-                    if(!banner_id){
-                        //1. var banner_id = result.data['banner_id'];  var 定义变量会在函数前面先声明
-                        banner_id = result.data['banner_id'];
-                    }
-                    bannerItem.attr('banner-id', banner_id);
-                    var priorityShow = bannerItem.find('.priority-show');
-                    priorityShow.text('优先级： ' + priority);
-                    window.messageBox.showSuccess(result.message)
-                } else {
-                    window.messageBox.showInfo(result.message)
-                }
+        var addImage = bannerItem.find('.new-img-url');
+        if (!addImage.length) {
+            xfzalert.alertInfo("请选择图片")
+        } else {
+            var image_url = addImage.attr('src');
+            var priority = bannerItem.find('.priority').val();
+            var jump_link = bannerItem.find('.jump-link').val();
+            var banner_id = bannerItem.attr('banner-id');
+            var url = null;
+            if (banner_id) {
+                url = '/cms/change_banner/'
+            } else {
+                url = '/cms/add_banners/'
             }
-        })
+            xfzajax.post({
+                'url': url,
+                'data': {
+                    'image_url': image_url,
+                    'priority': priority,
+                    'jump_link': jump_link,
+                    'banner_id': banner_id
+                },
+                'success': function (result) {
+                    if (result['code'] === 200) {
+                        console.log(result);
+                        //2. var banner_id = undefined  操作1，相当于操作 2
+                        if (!banner_id) {
+                            //1. var banner_id = result.data['banner_id'];  var 定义变量会在函数前面先声明
+                            banner_id = result.data['banner_id'];
+                        }
+                        bannerItem.attr('banner-id', banner_id);
+                        var priorityShow = bannerItem.find('.priority-show');
+                        priorityShow.text('优先级： ' + priority);
+                        window.messageBox.showSuccess(result.message)
+                    } else {
+                        window.messageBox.showInfo(result.message)
+                    }
+                }
+            })
+        }
     })
 }
 
@@ -121,9 +126,9 @@ $(function () {
         // 等同creatBannerItem()
         */
         var chirldens = bannerBox.children();
-        if (chirldens.length>=6){
+        if (chirldens.length >= 6) {
             xfzalert.alertInfo("只能添加6个轮播图")
-        }else {
+        } else {
             creatBannerItem()
         }
     })

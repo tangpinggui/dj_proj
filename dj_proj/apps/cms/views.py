@@ -1,10 +1,13 @@
 import os
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import View
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required  # 登录装饰器
 from django.utils.decorators import method_decorator
+from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 from qiniu import Auth
 
 from django.conf import settings
@@ -60,12 +63,6 @@ class WriteNewsView(View):
             return self.get(request)
         elif request.method == "POST":
             return self.post(request)
-
-
-def news_list(request):
-    newses = News.objects.all()
-    categories = NewsCategory.objects.all()
-    return render(request, 'cms/news_list.html', locals())
 
 
 @require_POST
@@ -177,7 +174,74 @@ def change_banner(request):
             jump_link = forms.cleaned_data.get('jump_link')
             banner_id = forms.cleaned_data.get('banner_id')
             Banners.objects.filter(id=banner_id).update(image_url=image_url, priority=priority, jump_link=jump_link)
-            return restful.result(data={"banner_id": banner_id}, message="轮播图修改成功")
+            return restful.result(data={"banner_id": banner_id, "csrf_token": csrf(request)}, message="轮播图修改成功")
         except:
             return restful.params_error(message="服务器出错")
     return restful.params_error(message="参数错误")
+
+
+class NewsListView(View):
+    def get(self, request):
+        ''' 分页 '''
+        page = int(request.GET.get('page', 1))  # 第多少页,默认1
+        newses = News.objects.select_related("category", "author").all()
+        categories = NewsCategory.objects.all()
+
+        p = Paginator(newses, 5)  # 每页显示n条数据
+        try:
+            page_obj = p.page(page)  # 第n页的 page对象 <Page 1 of n>
+        except:
+            return redirect(reverse("cms:news_list"))
+        current_page_newses = page_obj.object_list  # not func!! 当前页的newes所有数据 设置的是显示一条data
+        context = {
+            'newses': page_obj.object_list,
+            'categories': categories,
+            'p': p,
+            'current_page': page
+        }
+        context.update(self.get_paging_data(p, page_obj, show_pages=2, page=page))
+        return render(request, 'cms/news_list.html', context=context)
+
+    def get_paging_data(self, paginator, page_obj, show_pages, page=None):
+        """
+        分页当前页的左右范围
+        :param paginator: Paginator(obj, number)对象
+        :param page_obj: # 第n页的 page对象 <Page 1 of n> page_obj.number获取当前页
+        :param show_pages: 当前页左右展示的页数
+        :param page: 当前页  ps:可选参数
+        :return: 当前页左右显示的页数range对象 和 has_left(right)_more Bool值，用来判断是否显示 分页的省略号 ...
+        """
+        current_page = page_obj.number
+        show_pages = show_pages
+        pages_number = paginator.num_pages
+
+        has_left_more = False
+        has_right_more = False
+        # 左边的逻辑判断
+        print(current_page, 'c')
+        if current_page <= show_pages + 2:
+            left_start = 1
+            left_end = current_page
+        else:
+            has_left_more = True
+            left_start = current_page - show_pages
+            left_end = current_page
+        left_range = range(left_start, left_end)
+        # 右边的逻辑判断(在右边包括了当前页)
+        if current_page >= pages_number - show_pages - 1:
+            right_start = current_page
+            right_end = pages_number + 1
+        else:
+            has_right_more = True
+            right_start = current_page
+            right_end = current_page + show_pages + 1
+        right_range = range(right_start, right_end)
+        data = {
+            'left_range': left_range,
+            'right_range': right_range,
+            'has_left_more': has_left_more,
+            'has_right_more': has_right_more,
+            'current_page': current_page,
+        }
+        print(left_range, has_left_more)
+        return data

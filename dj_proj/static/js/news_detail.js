@@ -17,7 +17,7 @@ $(function () {
                     var comment = result['data'];
                     var tpl = template('comment-item', {'comment': comment});
                     var box = $('.comment-list-group');
-                    box.prepend(tpl)
+                    box.prepend(tpl);
                     textarea.val('')
                 } else {
                     window.messageBox.showInfo(result['message'])

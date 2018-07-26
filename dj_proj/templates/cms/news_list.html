@@ -1,5 +1,5 @@
 {% extends 'cms/base.html' %}
-
+{% load time_since %}
 
 {% block title %}
     新闻列表
@@ -7,7 +7,16 @@
 
 
 {% block head %}
+    <style>
+        .margins {
+            margin-right: 28px;
+        }
 
+        .box-footer {
+            line-height: 72px;
+        }
+    </style>
+    <script src="{% static 'js/news_list.js' %}"></script>
 {% endblock %}
 
 
@@ -17,32 +26,123 @@
 
 
 {% block content %}
-    <div class="row">
+    <div class="box">
         <div class="box-header">
-            <table class="form-inline">
-                <thead class="form-group">
-                <th>
-                    <div class="pull-left" style="margin-right: 25px">
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="pull-left margins">
                         <label for="start-input">时间：</label>
-                        <input class="form-control" type="datetime-local" id="start-input" placeholder="开始时间">
+                        <input readonly class="form-control" type="text" id="start-input" placeholder="开始时间">
                         <span>-</span>
-                        <input class="form-control" type="datetime-local" placeholder="结束时间">
+                        <input readonly class="form-control" type="text" placeholder="结束时间">
                     </div>
+                </div>
+                <div class="form-group margins">
                     <label for="title-input">标题：</label>
                     <input class="form-control" type="text" id="title-input" placeholder="关键字">
+                </div>
+                <div class="form-group margins">
                     <label for="">分类：</label>
                     <select class="form-control" name="" id="category-input">
                         {% for category in categories %}
                             <option value="">{{ category.name }}</option>
                         {% endfor %}
                     </select>
-                    <button class="btn btn-primary">查询</button>
-                    <a href="{% url 'cms:news_list' %}" class="btn btn-info btn-xs">清除查询</a>
-                </th>
+                </div>
+                <div class="form-group margins">
+                    <button class="btn btn-primary btn-sm clear-btn">查询</button>
+                </div>
+                <div class="form-group margins">
+                    <a href="{% url 'cms:news_list' %}" class="btn btn-info btn-sm">清除查询</a>
+                </div>
+            </form>
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>分类</th>
+                    <th>发布时间</th>
+                    <th>作者</th>
+                    <th>操作</th>
+                </tr>
                 </thead>
+                <tbody>
+                {% for news in newses %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'news:news_detail' news_id=news.pk %}">{{ news.title }}</a>
+                        </td>
+                        <td>{{ news.category.name }}</td>
+                        <td>{{ news.pubtime | cms_date_filter }}</td>
+                        <td>{{ news.author.username }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-xs">编辑</button>
+                            <button class="btn btn-danger btn-xs">删除</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
             </table>
         </div>
-        <div class="box-body"></div>
-        <div class="box-footer"></div>
+        <div class="box-footer">
+            <span class="pull-left">第{{ current_page }}页/共{{ p.num_pages }}页</span>
+            <nav aria-label="Page navigation" class="pull-right">
+                <ul class="pagination">
+                    {# 前一页 #}
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <span aria-hidden="true">&laquo;</span>
+                        </li>
+                    {% endif %}
+
+                    {# 当前页左边部分 #}
+                    {% if has_left_more %}
+                        <li><a href="?page=1">1</a></li>
+                        <li><span>...</span></li>
+                        {% for page in left_range %}
+                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        {% for page in left_range %}
+                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                    {# 当前页右边部分 ,包括了当前页 #}
+                    {% if has_right_more %}
+                        {% for page in right_range %}
+                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                        {% endfor %}
+                        <li><span>...</span></li>
+                        <li><a href="?page={{ p.num_pages }}">{{ p.num_pages }}</a></li>
+                    {% else %}
+                        {% for page in right_range %}
+                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+
+                    {# 后一页 #}
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}" aria-label="Next" class="disabled">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">
+                            <span aria-hidden="true">&raquo;</span>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        </div>
     </div>
 {% endblock %}
