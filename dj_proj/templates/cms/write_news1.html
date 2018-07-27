@@ -1,7 +1,11 @@
 {% extends 'cms/base.html' %}
 
 {% block title %}
+    {% if news %}
+    新闻编辑
+    {% else %}
     新闻发布
+    {% endif %}
 {% endblock %}
 
 
@@ -14,7 +18,11 @@
 
 
 {% block content-header %}
+    {% if news %}
+    <h1>编辑新闻</h1>
+    {% else %}
     <h1>发布新闻</h1>
+    {% endif %}
 {% endblock %}
 
 
@@ -26,25 +34,40 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="news-title">新闻标题</label>
-                            <input type="text" name="title" class="form-control" id="news-title" placeholder="输入新闻的标题">
+                            {% if news %}
+                                <input type="text" name="title" class="form-control" id="news-title" value="{{ news.title }}">
+                            {% else %}
+                                <input type="text" name="title" class="form-control" id="news-title" placeholder="输入新闻的标题">
+                            {% endif %}
                         </div>
                         <div class="form-group">
                             <label for="news-describe">新闻描述</label>
-                            <input type="text" name="desc" class="form-control" id="news-describe" placeholder="输入新闻的描述内容">
+                            {% if news %}
+                                <input type="text" name="desc" class="form-control" id="news-describe" value="{{ news.desc }}">
+                            {% else %}
+                                <input type="text" name="desc" class="form-control" id="news-describe" placeholder="输入新闻的描述内容">
+                            {% endif %}
                         </div>
                         <div class="form-group">
                             <label>新闻分类</label>
                             <select class="form-control" name="category">
                                 {% for category in categories %}
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% if news.category.name == category.name %}
+                                        <option selected value="{{ news.category.pk }}">{{ category.name }}</option>
+                                    {% else %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="news-picture">缩略图</label>
                             <div class="input-group">
-                                <input type="text" name="thumbnail" class="form-control" id="news-picture"
-                                       placeholder="图片url">
+                                {% if news %}
+                                <input type="text" name="thumbnail" class="form-control" id="news-picture" value="{{ news.thumbnail }}">
+                                {% else %}
+                                <input type="text" name="thumbnail" class="form-control" id="news-picture" placeholder="图片url">
+                                {% endif %}
                                 <span class="input-group-btn">
                                     <label class="btn btn-default btn-file">上传图片
                                         <input hidden type="file" class="btn btn-default" id="up-file" name="upfile">
@@ -64,10 +87,18 @@
                         </div>
                             <div class="form-group">
                                 <label for="news-content">新闻内容</label>
+                                {% if news %}
+                                <script id="editor" type="text/plain">{{ news.content | safe }}</script>
+                                {% else %}
                                 <script id="editor" type="text/plain"></script>
+                                {% endif %}
                             </div>
                             <div class="box-footer">
+                                {% if news %}
+                                <button type="submit" class="btn btn-primary pull-right" id="puBtn" pk="{{ news.pk }}">发布</button>
+                                {% else %}
                                 <button type="submit" class="btn btn-primary pull-right" id="puBtn">发布</button>
+                                {% endif %}
                             </div>
                         </div>
                 </form>

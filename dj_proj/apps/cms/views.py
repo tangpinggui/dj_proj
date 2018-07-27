@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from django.shortcuts import render, redirect, reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import View
@@ -8,13 +9,14 @@ from django.utils.decorators import method_decorator
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from urllib import parse
 from qiniu import Auth
 
 from django.conf import settings
 from .models import Banners
 from .forms import AddBannersForm, ChangeBannerForm
 from ..news.models import NewsCategory, News
-from ..news.forms import NewsForm
+from ..news.forms import NewsForm, EditCmsNewForm
 from ..xfzauth.xfz_auth_required import xfz_auth_required
 
 from utils import restful
@@ -180,13 +182,28 @@ def change_banner(request):
     return restful.params_error(message="参数错误")
 
 
+@method_decorator(login_required(login_url='/account/login/'), name='dispatch')
 class NewsListView(View):
     def get(self, request):
-        ''' 分页 '''
         page = int(request.GET.get('page', 1))  # 第多少页,默认1
         newses = News.objects.select_related("category", "author").all()
         categories = NewsCategory.objects.all()
+        ### 条件查询
+        start_time = request.GET.get('start')
+        end_time = request.GET.get('end')
+        title = request.GET.get('title')
+        category_id = int(request.GET.get('category', 0))
 
+        if start_time and end_time:
+            start_date = datetime.strptime(start_time, "%Y/%m/%d")
+            end_date = datetime.strptime(end_time, "%Y/%m/%d")
+            newses = newses.filter(pubtime__range=(start_date, end_date))
+        if title:
+            newses = newses.filter(title__icontains=title)
+        if category_id:
+            newses = newses.filter(category_id=category_id)
+
+        ### 分页
         p = Paginator(newses, 5)  # 每页显示n条数据
         try:
             page_obj = p.page(page)  # 第n页的 page对象 <Page 1 of n>
@@ -197,10 +214,23 @@ class NewsListView(View):
             'newses': page_obj.object_list,
             'categories': categories,
             'p': p,
-            'current_page': page
+            'current_page': page,
+            'start': start_time,
+            'end': end_time,
+            'title': title,
+            'category_id': category_id,
+            'url_parse': '&'+parse.urlencode({
+                'start': start_time,
+                'end': end_time,
+                'title': title,
+                'category': category_id
+            })
         }
         context.update(self.get_paging_data(p, page_obj, show_pages=2, page=page))
         return render(request, 'cms/news_list.html', context=context)
+
+    def post(self, request):
+        return restful.ok()
 
     def get_paging_data(self, paginator, page_obj, show_pages, page=None):
         """
@@ -218,7 +248,6 @@ class NewsListView(View):
         has_left_more = False
         has_right_more = False
         # 左边的逻辑判断
-        print(current_page, 'c')
         if current_page <= show_pages + 2:
             left_start = 1
             left_end = current_page
@@ -243,5 +272,50 @@ class NewsListView(View):
             'has_right_more': has_right_more,
             'current_page': current_page,
         }
-        print(left_range, has_left_more)
         return data
+
+
+@method_decorator(login_required(login_url='/account/login/'), name='dispatch')
+class EditCmsNews(View):
+    def get(self, request):
+        edit_news_pk = request.GET.get('pk')
+        news = News.objects.get(pk=edit_news_pk)
+        categories = NewsCategory.objects.all()
+        context = {
+            'news': news,
+            'pk': edit_news_pk,
+            'categories': categories
+        }
+        return render(request, 'cms/write_news1.html', context=context)
+    def post(self, request):
+        forms = EditCmsNewForm(request.POST)
+        if forms.is_valid():
+            cleaned_data = forms.cleaned_data
+            title = cleaned_data.get('title')
+            desc = cleaned_data.get('desc')
+            thumbnail = cleaned_data.get('thumbnail')
+            content = cleaned_data.get('content')
+            category = cleaned_data.get("category")
+            pk = int(cleaned_data.get('pk'))
+            pubtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            News.objects.filter(pk=pk).update(
+                title=title,
+                desc=desc,
+                thumbnail=thumbnail,
+                content=content,
+                category=category,
+                pubtime=pubtime
+            )
+            return restful.ok()
+        return restful.params_error(message=forms.get_first_message())
+
+
+@require_POST
+def del_news(request):
+    news_id = request.POST.get('pk')
+    news = News.objects.filter(pk=news_id)
+    print(news_id, news)
+    if news:
+        news.delete()
+        return restful.ok()
+    return restful.params_error(message="不存在的新闻")

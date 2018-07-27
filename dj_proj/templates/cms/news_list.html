@@ -16,14 +16,16 @@
             line-height: 72px;
         }
     </style>
-    <script src="{% static 'js/news_list.js' %}"></script>
+    <link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="{% static 'js/cms_news_list.js' %}"></script>
 {% endblock %}
 
 
 {% block content-header %}
     <h1>新闻管理</h1>
 {% endblock %}
-
 
 {% block content %}
     <div class="box">
@@ -32,20 +34,37 @@
                 <div class="form-group">
                     <div class="pull-left margins">
                         <label for="start-input">时间：</label>
-                        <input readonly class="form-control" type="text" id="start-input" placeholder="开始时间">
+                        {% if start %}
+                        <input readonly name="start" class="form-control" type="text" value="{{ start }}">
+                        {% else %}
+                        <input readonly name="start" class="form-control" type="text" placeholder="开始时间">
+                        {% endif %}
                         <span>-</span>
-                        <input readonly class="form-control" type="text" placeholder="结束时间">
+                        {% if end %}
+                        <input readonly name="end" class="form-control" type="text" value="{{ end }}">
+                        {% else %}
+                        <input readonly name="end" class="form-control" type="text" placeholder="结束时间">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="form-group margins">
                     <label for="title-input">标题：</label>
-                    <input class="form-control" type="text" id="title-input" placeholder="关键字">
+                    {% if title %}
+                    <input class="form-control" type="text" name="title" value="{{ title }}">
+                    {% else %}
+                    <input class="form-control" type="text" name="title" placeholder="关键字">
+                    {% endif %}
                 </div>
                 <div class="form-group margins">
                     <label for="">分类：</label>
-                    <select class="form-control" name="" id="category-input">
+                    <select class="form-control" name="category" id="category-input">
+                        <option value="0">所有分类</option>
                         {% for category in categories %}
-                            <option value="">{{ category.name }}</option>
+                            {% if category_id == category.pk %}
+                                <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                            {% else %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
@@ -78,8 +97,8 @@
                         <td>{{ news.pubtime | cms_date_filter }}</td>
                         <td>{{ news.author.username }}</td>
                         <td>
-                            <button class="btn btn-warning btn-xs">编辑</button>
-                            <button class="btn btn-danger btn-xs">删除</button>
+                            <a class="btn btn-warning btn-xs" href="{% url 'cms:edit_cms_news' %}?pk={{ news.pk }}">编辑</a>
+                            <button class="btn btn-danger btn-xs del-btn" pk="{{ news.pk }}">删除</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -93,7 +112,7 @@
                     {# 前一页 #}
                     {% if page_obj.has_previous %}
                         <li>
-                            <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <a href="?page={{ page_obj.previous_page_number }}{{ url_parse }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -108,30 +127,30 @@
                         <li><a href="?page=1">1</a></li>
                         <li><span>...</span></li>
                         {% for page in left_range %}
-                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                            <li><a href="?page={{ page }}{{ url_parse }}">{{ page }}</a></li>
                         {% endfor %}
                     {% else %}
                         {% for page in left_range %}
-                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                            <li><a href="?page={{ page }}{{ url_parse }}">{{ page }}</a></li>
                         {% endfor %}
                     {% endif %}
                     {# 当前页右边部分 ,包括了当前页 #}
                     {% if has_right_more %}
                         {% for page in right_range %}
-                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                            <li><a href="?page={{ page }}{{ url_parse }}">{{ page }}</a></li>
                         {% endfor %}
                         <li><span>...</span></li>
-                        <li><a href="?page={{ p.num_pages }}">{{ p.num_pages }}</a></li>
+                        <li><a href="?page={{ p.num_pages }}{{ url_parse }}">{{ p.num_pages }}</a></li>
                     {% else %}
                         {% for page in right_range %}
-                            <li><a href="?page={{ page }}">{{ page }}</a></li>
+                            <li><a href="?page={{ page }}{{ url_parse }}">{{ page }}</a></li>
                         {% endfor %}
                     {% endif %}
 
                     {# 后一页 #}
                     {% if page_obj.has_next %}
                         <li>
-                            <a href="?page={{ page_obj.next_page_number }}" aria-label="Next" class="disabled">
+                            <a href="?page={{ page_obj.next_page_number }}{{ url_parse }}" aria-label="Next" class="disabled">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

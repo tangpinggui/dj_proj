@@ -19,4 +19,6 @@ urlpatterns = [
     path("banner_list/", views.banner_list, name='banner_list'),
     path("delete_banner/", views.delete_banner, name='delete_banner'),
     path("change_banner/", views.change_banner, name='change_banner'),
+    path("edit_cms_news/", views.EditCmsNews.as_view(), name='edit_cms_news'),
+    path("del_news/", views.del_news, name='del_news'),
 ]

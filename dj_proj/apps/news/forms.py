@@ -21,3 +21,10 @@ class NewsForm(forms.ModelForm, FormMixin):
 class CommentForm(forms.Form, FormMixin):
     news_id = forms.IntegerField()
     content = forms.CharField()
+
+
+class EditCmsNewForm(NewsForm):
+    pk = forms.IntegerField()
+    class Meta:
+        model = News
+        fields = ('title', 'desc', 'content', 'thumbnail', 'pk')  # here

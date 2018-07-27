@@ -111,15 +111,22 @@ $(function () {
         var category = $("select[name='category']").val();
         var thumbnail = $("input[name='thumbnail']").val();
         var content_html = ue.getContent();
-
+        var pk = $(this).attr("pk");
+        var url;
+        if(pk){
+            url = '/cms/edit_cms_news/'
+        }else {
+            url = '/cms/write/news/'
+        }
         xfzajax.post({
-            'url': '/cms/write/news/',
+            'url': url,
             'data': {
                 'title': title,
                 'desc': desc,
                 'category': category,
                 'thumbnail': thumbnail,
-                'content': content_html
+                'content': content_html,
+                'pk': pk
             },
             'success': function (result) {
                 if (result['code'] === 200) {
