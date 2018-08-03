@@ -3,16 +3,20 @@
 {% block title %}小饭桌创业课堂-课程详情页{% endblock %}
 
 {% block head %}
+    <script src="{% static 'videojs/video.min.js' %}"></script>
+    <script src="{% static 'videojs/videojs-contrib-hls.min.js' %}"></script>
+    <script src="{% static 'videojs/videojs-contrib-quality-levels.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.bdstatic.com/jwplayer/latest/cyberplayer.js"></script>
+    <script src="{% static 'js/course_detail.js' %}"></script>
     <link rel="stylesheet" href="{% static "css/course/course_detail.css" %}">
 {% endblock %}
-
 {% block main %}
     <div class="main">
         <div class="course-container">
             <div class="course-video-container">
                 <div class="banner">
                     <div class="banner-left">
-                        <p class="video-title">对赌是什么 该不该做对赌</p>
+                        <p class="video-title">{{ course.title }}</p>
                         <div class="share-video-group">
                             <span>分享至：</span>
                             <span class="share-icon wx-share-icon"></span>
@@ -20,12 +24,23 @@
                         </div>
                     </div>
                     <div class="buy-course-group">
-                        <a href="#" class="buy-course-btn">购买课程</a>
-                        <span class="price-text">￥44</span>
+                        {% if course.price > 0 %}
+                            {% if not bought %}
+                                <a href="{% url 'course:course_order' %}?course_id={{ course.pk }}"
+                                   class="buy-course-btn">购买课程</a>
+                                <span class="price-text">￥: {{ course.price }}</span>
+                            {% else %}
+                                <span class="price-text">已购买该课程</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="price-text">免费</span>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="video-container" id="playercontainer">
-
+                <div class="video-container">
+                    <span hidden data-video-url="{{ course.video_url }}" data-cover-url="{{ course.cover_url }}"
+                          data-course-id={{ course.pk }}></span>
+                    <div id="playercontainer"></div>
                 </div>
             </div>
             <div class="course-detail-container">
@@ -33,22 +48,31 @@
                     <div class="detail-item-group">
                         <p class="item-title">课程讲师</p>
                         <div class="teacher-group">
-                            <img src="#" alt="" class="avatar-group">
+                            <img src="{{ course.teacher.avatar }}" alt="" class="avatar-group">
                             <div class="teacher-info-group">
-                                <p class="author-name">小明</p>
-                                <p class="author-identify">XX投资经理</p>
+                                <p class="author-name">{{ course.teacher.name }}</p>
+                                <p class="author-identify">{{ course.teacher.position }}</p>
                             </div>
                         </div>
-                        <div class="item-content">乔继英，专业投资人，一线基金董事总经理，十五年以上研发、市场销售、投资经验，投资领域覆盖天使投资、中早期风险投资、PE投资、并购、母基金FOF投资等领域。代表案例：华润凤凰（1515.HK）、微芯生物、二毛照护、九鼎美元基金等。个人间接投资摩拜单车、硅谷大数据公司Palantir等。曾在淡马锡祥峰投资、蓝驰创投、启迪创投等工作，世界五百强公司研发、市场销售主管。北京市高精尖产业基金评审组长、知名证券公司专业专家。清华大学本科、医学院博士、校友导师，曾与哈佛大学合作课题；香港中文大学金融MBA、客座讲师。</div>
+                        <div class="item-content">{{ course.teacher.profile }}</div>
                     </div>
                     <div class="detail-item-group">
                         <p class="item-title">课程简介</p>
-                        <div class="item-content">经常听到有言论说：创业者千万不要和投资人签订对赌协议！如何正确的认识对赌协议，对赌协议又会存在哪些风险呢？</div>
+                        <div class="item-content">{{ course.profile | safe }}</div>
                     </div>
                     <div class="detail-item-group">
                         <p class="item-title">课程大纲</p>
                         <div class="item-content">
-                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">一、如何正确的理解对赌？</p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">二、消除对赌的几个误区</p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">三、对赌对投资人、创业者的影响</p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">四、对赌的具体形式</p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">五、对赌需要注意的风险</p>
+                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">
+                                一、如何正确的理解对赌？</p>
+                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">
+                                二、消除对赌的几个误区</p>
+                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">
+                                三、对赌对投资人、创业者的影响</p>
+                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">
+                                四、对赌的具体形式</p>
+                            <p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(68, 68, 68); font-family: STHeiti, &quot;Microsoft YaHei&quot;, Helvetica, Arial, sans-serif; font-size: 15px; text-align: justify; white-space: normal; background-color: rgb(255, 255, 255);">
+                                五、对赌需要注意的风险</p>
                         </div>
                     </div>
                     <div class="detail-item-group">
@@ -74,7 +98,7 @@
                         <p class="inner-course-title">对赌协议</p>
                         <div class="buy-course-group">
                             <a href="javascript(0);" class="buy-course-btn">购买课程</a>
-                            <span class="price-text">￥49</span>
+                            <span class="price-text">￥: {{ course.price }}</span>
                         </div>
                     </div>
                 </div>

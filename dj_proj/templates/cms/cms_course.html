@@ -1,0 +1,76 @@
+{% extends 'cms/base.html' %}
+
+
+{% block title %}
+    课程管理
+{% endblock %}
+
+
+{% block head %}
+    <script src="{% static 'ueditor/ueditor.config.js' %}"></script>
+    <script src="{% static 'ueditor/ueditor.all.min.js' %}"></script>
+    <script src="{% static 'js/cms_course.js' %}"></script>
+{% endblock %}
+
+
+{% block content-header %}
+    <h1>发布课程</h1>
+    <script src=""></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="title-input">标题</label>
+                            <input class="form-control" type="text" id="title-input">
+                        </div>
+                        <label>课程分类</label>
+                        <select class="form-control" id="category-input">
+                            {% for category in course_categories %}
+                                    <option value="{{ category.pk }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-group">
+                            <label>讲师</label>
+                            <select class="form-control" id="teacher-input">
+                            {% for teacher in teachers %}
+                                    <option value="{{ teacher.pk }}">{{ teacher.name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="video-input">视频地址</label>
+                            <input class="form-control" type="text" id="video-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="cover-input">封面图</label>
+                            <input class="form-control" type="text" id="cover-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="price-input">价格</label>
+                            <input class="form-control" type="text" id="price-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="long-input">时长</label>
+                            <input class="form-control" placeholder="单位: s" type="text" id="duration-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-input">课程简介</label>
+                            <script type="text/plain" id="profile-input"></script>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary pull-right" id="pub-course">发布</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

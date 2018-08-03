@@ -15,9 +15,11 @@ from qiniu import Auth
 from django.conf import settings
 from .models import Banners
 from .forms import AddBannersForm, ChangeBannerForm
-from ..news.models import NewsCategory, News
-from ..news.forms import NewsForm, EditCmsNewForm
-from ..xfzauth.xfz_auth_required import xfz_auth_required
+from apps.course.forms import CourseForm
+from apps.news.models import NewsCategory, News
+from apps.course.models import Category, Course, Teacher
+from apps.news.forms import NewsForm, EditCmsNewForm
+from apps.xfzauth.xfz_auth_required import xfz_auth_required
 
 from utils import restful
 
@@ -319,3 +321,33 @@ def del_news(request):
         news.delete()
         return restful.ok()
     return restful.params_error(message="不存在的新闻")
+
+
+class AddCourse(View):
+    def get(self, request):
+        course_categories = Category.objects.all()
+        teachers = Teacher.objects.all()
+        return render(request, 'cms/cms_course.html', locals())
+
+    def post(self, request):
+        forms = CourseForm(request.POST)
+        print(forms.data)
+        if forms.is_valid():
+            clean_data = forms.cleaned_data
+            title = clean_data.get('title')
+            category_id = int(clean_data.get('category_id'))
+            teacher_id = int(clean_data.get('teacher_id'))
+            video_url = clean_data.get('video_url')
+            cover_url = clean_data.get('cover_url')
+            profile = clean_data.get('profile')
+            price = clean_data.get('price')
+            duration = clean_data.get('duration')
+
+            category = Category.objects.get(pk=category_id)
+            teacher = Teacher.objects.get(pk=teacher_id)
+            Course.objects.create(
+                title=title, category=category, teacher=teacher, profile=profile,
+                video_url=video_url, cover_url=cover_url, price=price, duration=duration
+            )
+            return restful.ok()
+        return restful.params_error(message=forms.get_first_message())

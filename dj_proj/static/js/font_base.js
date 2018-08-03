@@ -31,3 +31,14 @@ $(function () {
         };
     }
 });
+
+$(function () {
+   var menuLi = $('.menu li');
+   menuLi.click(function () {
+       var index = $(this);
+       menuLi[index].addClass('active');
+       if(index>1){
+           menuLi[index-1].removeClass('active')
+       }
+   })
+});

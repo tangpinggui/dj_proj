@@ -88,7 +88,7 @@
                             <div class="form-group">
                                 <label for="news-content">新闻内容</label>
                                 {% if news %}
-                                <script id="editor" type="text/plain">{{ news.content | safe }}</script>
+                                <script id="editor" type="text/plain">{{ news.content }}</script>
                                 {% else %}
                                 <script id="editor" type="text/plain"></script>
                                 {% endif %}
