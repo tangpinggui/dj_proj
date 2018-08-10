@@ -18,10 +18,10 @@
     <nav class="nav">
         <a href="/"><h1 class="logo-box"></h1></a>
         <ul class="menu">
-            <li class="active"><a href="/">创投资讯</a></li>
+            <li class=""><a href="{% url 'news:index' %}">创投资讯</a></li>
             <li><a href="{% url 'course:course_index' %}">创业课堂</a></li>
             <li><a href="#">付费资讯</a></li>
-            <li><a href="#">搜索</a></li>
+            <li><a href="{% url 'news:search_news' %}">搜索</a></li>
         </ul>
         <div class="auth-group">
             <span class="user-icon icon-person iconfont"></span>
@@ -49,26 +49,26 @@
             <div class="detail-info-group">
                 <div class="top-group">
                     <ul class="links">
-                        <li><a href="#">关于小饭桌</a></li>
-                        <li><a href="#">创业课堂</a></li>
-                        <li><a href="#">寻求报道</a></li>
-                        <li><a href="#">创业礼包</a></li>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">创业问答</a></li>
+                        <li><a href="#">寻求帮助</a></li>
+                        <li><a href="#">回馈礼包</a></li>
                     </ul>
                     <div class="about-us">
                         <span>关于我们：</span>
                         <span class="weixin">xfz008</span>
-                        <span class="weibo">小饭桌创业课堂</span>
+                        <span class="weibo">welcomehere</span>
                     </div>
                 </div>
                 <div class="bottom-group">
-                    <p class="address">地址：北京市朝阳区东三环北路38号院1号楼17层2001内1、16室</p>
-                    <p class="contact">联系方式：400-810-1090（工作日10点-18点)</p>
+                    <p class="address">地址：地球一号实验基地</p>
+                    <p class="contact">联系方式：9090980（工作日10点-18点)</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="footer-2">
-        ©2017 北京子木投资顾问有限公司 京ICP备15051289号-1
+        ©2017 98k星云 98kICP备52098k号-1
     </div>
 </footer>
 </body>

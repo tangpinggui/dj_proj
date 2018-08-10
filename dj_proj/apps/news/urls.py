@@ -10,6 +10,7 @@ urlpatterns = [
     path('news_list/', views.news_list, name='news_list'),
     path('news_detail/<news_id>/', views.news_detail, name='news_detail'),
     path('add_news_comment/', views.add_comment, name='add_news_comment'),
+    path('search_news/', views.search_news, name='search_news'),
 ]
 
 # url反转，反查

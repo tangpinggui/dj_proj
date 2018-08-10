@@ -35,12 +35,12 @@ $(function () {
                     data: {'pk': pk},
                     success: function (result) {
                         if (result['code'] === 200) {
-                            xfzalert.alertSuccess("删除成功",function () {
-                                // window.location.reload()
-                                window.location = window.location.href
-                            })
+                            xfzalert.alertInfo('弹不弹？');
+                            xfzalert.alertSuccess("删除成功", function () {
+                            });
+                            console.log('1111111111111111111111111');
                         } else {
-                            window.messageBox.showError(result.message)
+                            window.messageBox.showError(result.message);
                         }
                     }
                 })

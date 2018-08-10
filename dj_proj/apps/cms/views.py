@@ -19,7 +19,7 @@ from apps.course.forms import CourseForm
 from apps.news.models import NewsCategory, News
 from apps.course.models import Category, Course, Teacher
 from apps.news.forms import NewsForm, EditCmsNewForm
-from apps.xfzauth.xfz_auth_required import xfz_auth_required
+from apps.xfzauth.xfz_auth_required import xfz_auth_required, xfz_permission_required
 
 from utils import restful
 
@@ -35,6 +35,7 @@ def index(request):
 # method_decorator 使装饰器装饰在类上面（装饰器的类装饰器？）  login_required 登陆验证,失败跳转
 # despatch 类里面有多个方法（get,post）.将这些方法都装饰在despatch中,(通过despatch方法确定出get or post 再由login_required装饰)。
 @method_decorator(login_required(login_url='/account/login/'), name='dispatch')
+@method_decorator(xfz_permission_required(News), name='dispatch')
 class WriteNewsView(View):
     def get(self, request):
         categories = NewsCategory.objects.all()
@@ -70,6 +71,7 @@ class WriteNewsView(View):
 
 
 @require_POST
+@staff_member_required(login_url='/')
 def save_thumbnail(request):
     """ 文件本地储存  """
     try:
@@ -87,6 +89,7 @@ def save_thumbnail(request):
 
 
 @require_GET
+@method_decorator(xfz_permission_required(News), name='dispatch')
 def qntoken(request):
     access_key = 'qiniu access key'
     secret_key = 'qiniu secret key'
@@ -97,12 +100,15 @@ def qntoken(request):
     return restful.result(data={'token': token})
 
 
+@xfz_permission_required(NewsCategory)
 def news_category(request):
     categories = NewsCategory.objects.order_by('-id')  # 倒序
+    print('cocc')
     return render(request, 'cms/news_category1.html', locals())
 
 
 @require_POST
+@xfz_permission_required(NewsCategory)
 def add_news_category(request):
     name = request.POST.get('name')
     exiets = NewsCategory.objects.filter(name=name).exists()
@@ -114,6 +120,7 @@ def add_news_category(request):
 
 
 @require_POST
+@xfz_permission_required(NewsCategory)
 def edit_news_category(request):
     name = request.POST.get('name')
     pk = request.POST.get('pk')
@@ -125,6 +132,7 @@ def edit_news_category(request):
 
 
 @require_POST
+@xfz_permission_required(NewsCategory)
 def del_news_category(request):
     pk = request.POST.get('pk')
     try:
@@ -135,11 +143,13 @@ def del_news_category(request):
 
 
 @xfz_auth_required
+@xfz_permission_required(Banners)
 def banners(request):
     return render(request, 'cms/banners.html')
 
 
 @require_POST
+@xfz_permission_required(Banners)
 def add_banners(request):
     forms = AddBannersForm(request.POST)
     if forms.is_valid():
@@ -156,12 +166,14 @@ def add_banners(request):
 
 
 @require_POST
+@xfz_permission_required(Banners)
 def banner_list(request):
     banners = list(Banners.objects.all().values())  # values将QuerySet对象里的数据转化成字典
     return restful.result(data={'banners': banners})
 
 
 @require_POST
+@xfz_permission_required(Banners)
 def delete_banner(request):
     banner_id = request.POST.get('banner_id')
     Banners.objects.get(id=banner_id).delete()
@@ -169,6 +181,7 @@ def delete_banner(request):
 
 
 @require_POST
+
 def change_banner(request):
     forms = ChangeBannerForm(request.POST)
     if forms.is_valid():
@@ -185,6 +198,7 @@ def change_banner(request):
 
 
 @method_decorator(login_required(login_url='/account/login/'), name='dispatch')
+@method_decorator(xfz_permission_required(News), name='dispatch')
 class NewsListView(View):
     def get(self, request):
         page = int(request.GET.get('page', 1))  # 第多少页,默认1
@@ -276,7 +290,7 @@ class NewsListView(View):
         }
         return data
 
-
+@method_decorator(xfz_permission_required(News), name='dispatch')
 @method_decorator(login_required(login_url='/account/login/'), name='dispatch')
 class EditCmsNews(View):
     def get(self, request):
@@ -311,7 +325,7 @@ class EditCmsNews(View):
             return restful.ok()
         return restful.params_error(message=forms.get_first_message())
 
-
+@xfz_permission_required(News)
 @require_POST
 def del_news(request):
     news_id = request.POST.get('pk')
@@ -323,6 +337,7 @@ def del_news(request):
     return restful.params_error(message="不存在的新闻")
 
 
+@method_decorator(xfz_permission_required(Course), name='dispatch')
 class AddCourse(View):
     def get(self, request):
         course_categories = Category.objects.all()
@@ -331,7 +346,6 @@ class AddCourse(View):
 
     def post(self, request):
         forms = CourseForm(request.POST)
-        print(forms.data)
         if forms.is_valid():
             clean_data = forms.cleaned_data
             title = clean_data.get('title')

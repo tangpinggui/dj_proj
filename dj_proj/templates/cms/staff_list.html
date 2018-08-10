@@ -1,0 +1,61 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    员工管理
+{% endblock %}
+
+{% block head %}
+    <script src="{% static 'js/staff_list.js' %}"></script>
+{% endblock %}
+
+{% block content-header %}
+    <h1>员工列表</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="header">
+                    <a class="btn btn-primary pull-right" href="{% url 'cms:add_staff' %}">新增员工</a>
+                </div>
+                <div class="box-content">
+                    <table class="table table-bordered">
+                        <caption>
+                            <strong>员工信息</strong>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>电话</th>
+                            <th>分组</th>
+                            <th>管理</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for staff in staffs %}
+                            <tr telephone="{{ staff.telephone }}">
+                                <td>{{ staff.username }}</td>
+                                <td>{{ staff.telephone }}</td>
+                                <td>
+                                    {% if staff.is_superuser %}
+                                        超级管理员
+                                    {% else %}
+                                        {% for group in staff.groups.all %}
+                                            {{ group.name }}
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'cms:add_staff' %}"><button class="btn btn-warning btn-xs edit-btn">编辑</button></a>
+                                    <button class="btn btn-danger btn-xs delete-btn">删除</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

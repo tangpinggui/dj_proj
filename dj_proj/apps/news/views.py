@@ -3,6 +3,7 @@ from django.shortcuts import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.conf import settings
 from django.http import Http404
+from django.db.models import Q
 
 from .models import News, NewsCategory, Comment
 from .news_serializer import NewsSerializers, CommentSerializers
@@ -69,3 +70,17 @@ def add_comment(request):
         serialize = CommentSerializers(comment)
         return restful.result(data=serialize.data)
     return restful.params_error(message=forms.get_first_message())
+
+def search_news(request):
+    tujian_news = News.objects.all()[:3]
+    search_key = request.GET.get('q')
+    if search_key:
+        newses = News.objects.filter(Q(title__icontains=search_key)|Q(desc__contains=search_key)|Q(content__contains=search_key))
+        if newses:
+            context = {'newses': newses}
+        else:
+            context = {'noMatchAny': "暂时没有找到您需要的文章"}
+    else:
+        context = {}
+    context.update({'tujian_news': tujian_news})
+    return render(request, 'news/search.html', context=context)

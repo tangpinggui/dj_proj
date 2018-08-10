@@ -130,15 +130,17 @@ body{
 
 /***************footer的样式****************/
 .footer{
+    position: absolute;
     width: 100%;
-    margin-top: 40px;
+    height: 60px; /*脚部的高度*/
+    clear: both;
     color: #c9c9c9;
     font-size: 14px;
 }
 
 .footer .footer-1{
     width: 100%;
-    height: 100px;
+    height: 90px;
     background: #555e68;
 }
 
@@ -150,10 +152,9 @@ body{
 
 .footer-inner .logo-box{
     width: 168px;
-    height: 54px;
-    background: url("http://xfz.cn/static/build/images/foot-logo.png");
+    height: 90px;
+    background: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532582595344&di=7338b8956c34ebe847b713ba112b7a56&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F01%2F30%2F16pic_130073_b.jpg");
     background-size: 100%;
-    margin-top: 20px;
     float: left;
 }
 
@@ -211,10 +212,12 @@ body{
 
 
 .detail-info-group .bottom-group{
+    margin-top: 10px;
     overflow: hidden;
 }
 
 .bottom-group .address{
+    margin-left: 10px;
     float: left;
 }
 

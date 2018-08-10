@@ -1,24 +1,28 @@
 from django.shortcuts import render, reverse, redirect
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
+import time, hashlib, hmac, os
+from django.conf import settings
+from hashlib import md5
 
 from .models import Course, CourseOrder
 from .forms import CourseForm
 
 from utils import restful
-import time, hashlib, hmac, os
-from django.conf import settings
-from hashlib import md5
+from apps.xfzauth.xfz_auth_required import xfz_auth_required
 
 
 def course_index(request):
     courses = Course.objects.all()
     return render(request, 'course/course_index.html', locals())
 
+
+@xfz_auth_required
 def course_detail(request, course_id):
     course = Course.objects.get(pk=course_id)
     bought = CourseOrder.objects.filter(buyer=request.user, course=course_id, statuse=2).exists()
     return render(request, 'course/course_detail.html', locals())
+
 
 def course_token(request):
     """ 百度点播的token """
@@ -48,12 +52,13 @@ def course_token(request):
     # a5e28c640e8436d9d0b7800116d1d59fc358229e8e448c5bb43d88fcdb114f83_92166a15820c4d2eb7798a57ee8230d2_1533032256
     return restful.result(data={'token': token})
 
+
 def course_order(request):
     course_id = request.GET.get('course_id')
     course = Course.objects.get(id=course_id)
     orders = CourseOrder.objects.filter(buyer=request.user, course=course)  # 未支付
     notify_url = request.build_absolute_uri(reverse('course:notify_url'))
-    return_url = request.build_absolute_uri(reverse('course:course_detail',kwargs={
+    return_url = request.build_absolute_uri(reverse('course:course_detail', kwargs={
         "course_id": course_id
     }))
     if orders:
@@ -64,7 +69,9 @@ def course_order(request):
         order = CourseOrder.objects.create(amount=course.price, buyer=request.user, course=course, statuse=1)
     return render(request, 'course/create_order.html', locals())
 
+
 def order_key(request):
+    ''' 生成key '''
     uid = '49dc532695baa99e16e01bc0'
     token = 'e6110f92abcb11040ba153967847b7a6'
     price = request.POST.get('price')
@@ -75,9 +82,11 @@ def order_key(request):
     notify_url = request.build_absolute_uri(reverse('course:notify_url'))
     return_url = request.POST.get('return_url')
 
-    key = md5((goodsname + istype + notify_url + orderid + orderuid + price + return_url + token + uid).encode('utf-8')).hexdigest()
+    key = md5((goodsname + istype + notify_url + orderid + orderuid + price + return_url + token + uid).encode(
+        'utf-8')).hexdigest()
     print(uid, price, notify_url, return_url, orderid, orderuid, goodsname, key)
     return restful.result(data={'key': key})
+
 
 @csrf_exempt
 def notify_url(request):
